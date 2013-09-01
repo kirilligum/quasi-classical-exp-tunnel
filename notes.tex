@@ -1,0 +1,157 @@
+%%fakesection
+\documentclass{article}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage{soul}
+\usepackage{fullpage}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{pifont}
+\usepackage{gnuplottex}
+\usepackage{float}
+
+
+\let\Item\item
+\renewcommand\item{\normalcolor\Item}
+
+\newcommand\ml{\color[RGB]{153, 150, 204}} %may be later
+\newcommand\later{\color[RGB]{153, 204, 150}} %later
+\newcommand\nn{\color[RGB]{124, 124, 255}} %no need to do
+\newcommand\done{\color[RGB]{129, 180, 185} \ding{52} }
+\newcommand\now{\color[RGB]{255, 0, 0}} %current
+
+\begin{document}
+
+\section{exp-to-exp tunneling}
+
+\subsection{Idea}
+The idea is to model a tunneling from increasing exponential to the decreasing one with a gaussian coupling. 
+
+\begin{equation}
+  H = \frac{p^2}{2m} + e^r n1 + e^{-r} n2  + e^{-r^2} n1 n2
+\end{equation}
+
+plot here
+\begin{figure}[h]
+  \centering
+  \begin{gnuplot}
+    plot [-2:2] exp(x) lw 2 , exp(-x) lw 2, 2*exp(-x*x) lw 2 
+  \end{gnuplot}
+\end{figure}
+
+\subsection{Problem}
+
+The standard binning procedure that we used before doesn't work.
+
+Suppose the initial condition is a gaussian distribution around $p=10$, $q=-10$.
+If $n1=1$ and $n2=0$, everything works. However, when we start using binning, $n2\neq 0$.
+This means that the term $e^{-r}n2$ can be very large and dominate the hamiltonian. 
+The same problem appears after the transition through the barrier since $n1\neq0$.
+
+\subsection{Proposed solutions}
+
+There are 3 ways to solve the problem by changing:
+\begin{enumerate}
+  \item the potential -- similar to Tully
+  \item the sampling
+  \item varience in $n$ 
+\end{enumerate}
+
+\subsection{Changing the potential}
+\subsection{Proportional sampling}
+we need to change the sampling so that in the begining and in the end the energy doesn't go infinite.
+to do that, we change the sizes of the sampling bins relative to the size of the potential. we also throw away trajectories after the tunneling
+when the traj goes outside of the bin+bin\_varience, it gets thrown out
+\subsection{Dynamic variance}
+v1*n1 becomes something like v1*(n1i + (n1-n1i)/v1) or v1*(n1i + (n1-n1i)*exp(v1-v2)) or v1/v2.
+the idea is to make the bin for n1 smaller when one of the potentials is much larger then the other. 
+
+
+
+\section{keys}
+\begin{itemize}
+  \item \ml may be later
+  \item \done done
+  \item \nn no need to do
+  \item \now current 
+\end{itemize}
+
+t[...] for tags
+
+t[priorety unsorted] or t[pu]-- not sorted in priorety yet
+
+\section{doing}
+\subsection{potential-based binning for many traj}
+\section{to do}
+\subsection{change the hamiltonian to have dynamic variation of ns}
+\subsection{change the potential to tully's}
+\subsection{think of another way to change the potential}
+\section{to do priority unsorted}
+\section{plan}
+%%%%%%%%%%%%%%%%%%
+\section{done}
+\subsection{when the increasing potential comes too high, kill the bins}
+Sun Sep  1 01:15:35 PDT 2013
+\begin{figure}[h]
+  \centering
+  \input{endpotbin.tex}
+  \caption{when v1 becomes too large, we cut n1 to 0 and n2 to 1}
+  \label{fig:endpotbin}
+\end{figure}
+\subsection{switch off the dynamics when potential comes to the same level as before}
+Sun Sep  1 01:14:06 PDT 2013
+
+didn't work that well. it switches too late
+\subsection{proportional binning in the begining}
+Sat Aug 31 14:57:57 PDT 2013
+\begin{itemize}
+  \item \done put v1 and v2 potentials into methods
+  \item \done calculate the energy of the surfaces from the initial state before binning.
+  \item \done change the bins proportional to the energies
+\end{itemize}
+Sat Aug 31 14:51:59 PDT 2013
+\begin{figure}[H]
+  \centering
+  \input{proportional_binning.tex}
+  \caption{in the begining bin size is porprtional to the surface's energy and sum to 1}
+  \label{fig:proportional_binning}
+\end{figure}
+when both momentum and poition is positive, and n1 fully transfered to n2, the particle should keep moving. 
+that is when i should make n1 = 0.
+\subsection{mark thrown out trajectory as bad}
+Fri Aug 30 19:29:01 PDT 2013
+in the state vector, after energy 0 is for a good traj, 1 is for bad. it's a bit of a waste to have it as a double but it's ok.
+Fri Aug 30 18:41:58 PDT 2013
+\subsection{make a function to throw out trajs that get way out of range}
+\begin{itemize}
+  \item give initial energy as a parameter.
+  \item when the deviation of the energy becomes 2x large, throw the trajectory out
+\end{itemize}
+\subsection{try on short scale with low energies}
+Fri Aug 30 09:09:53 PDT 2013
+\subsection{make different bins for n1 and n2}
+Thu Aug 29 17:06:06 PDT 2013
+\subsection{pass initial n1 and n2 to the hamiltonian}
+Thu Aug 29 14:20:20 PDT 2013
+\subsection{clean parameters a bit}
+Thu Aug 29 13:41:59 PDT 2013
+\subsection{simplify parameters so the numbers are around 1}
+Thu Aug 29 14:17:04 PDT 2013
+\section{notes}
+\subsection{short scale first tunneling}
+Fri Aug 30 08:53:57 PDT 2013
+\begin{figure}[H]
+  \centering
+  \input{tunnel01.tex}
+  \caption{increasing the strength of coupling allows for tunneling. the tunneling doesn't happen till $n1\to n2$}
+  \label{fig:tunnel01}
+\end{figure}
+
+\subsection{only one exponential}
+Thu Aug 29 14:16:47 PDT 2013
+\begin{figure}[H]
+  \centering
+  \input{oneexp.tex}
+  \caption{a potential with only one exponential. the proton turns back and $p1$ and $x1$ are oscillating}
+  \label{fig:oneexp}
+\end{figure}
+\end{document}
